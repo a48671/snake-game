@@ -2,7 +2,12 @@ game.board = {
     game: game,
     cells: [],
     size: 15,
+    offsets: { offsetX: 0, offsetY: 0 },
+    cell: { width: 0, height: 0 },
+    OFFSET_BETWEEN_CELLS: 1,
     create() {
+        this.setCell();
+        this.setOffsets();
         this.createCells();
     },
     createCells() {
@@ -13,19 +18,31 @@ game.board = {
         }
     },
     createCall(row, coll) {
-        const cellSize = game.sprites.cell.width + 1;
-        const boardWidth = cellSize * this.size;
-        const boardHeight = cellSize * this.size;
-
-        const offsetX = (game.width - boardWidth) / 2;
-        const offsetY = (game.height - boardHeight) / 2;
+        const cellWidth = this.cell.width + this.OFFSET_BETWEEN_CELLS;
+        const cellHeight = this.cell.height + this.OFFSET_BETWEEN_CELLS;
 
         return ({
             coll,
             row,
-            x: offsetX + cellSize * coll,
-            y: offsetY + cellSize * row
+            x: Math.ceil(this.offsets.offsetX + cellWidth * coll),
+            y: Math.ceil(this.offsets.offsetY + cellHeight * row)
         });
+    },
+    setCell() {
+        this.cell.width = game.sprites.cell.width;
+        this.cell.height = game.sprites.cell.height;
+    },
+    setOffsets() {
+        const cellWidth = this.cell.width + this.OFFSET_BETWEEN_CELLS;
+        const cellHeight = this.cell.height + this.OFFSET_BETWEEN_CELLS;
+        const boardWidth = cellWidth * this.size;
+        const boardHeight = cellHeight * this.size;
+
+        this.offsets.offsetX = (game.width - boardWidth) / 2;
+        this.offsets.offsetY = (game.height - boardHeight) / 2;
+    },
+    getCellByCollRow(coll, row) {
+        return this.cells.find(cell => (cell.row === row && cell.coll === coll));
     },
     render() {
         const { ctx, sprites } = game;

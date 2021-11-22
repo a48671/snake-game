@@ -3,12 +3,34 @@ game.snake = {
     board: game.board,
     cells: [],
     moving: false,
+    directions: {
+        up: {
+            row: -1,
+            coll: 0
+        },
+        down: {
+            row: 1,
+            coll: 0
+        },
+        right: {
+            row: 0,
+            coll: 1
+        },
+        left: {
+            row: 0,
+            coll: -1
+        }
+    },
+    direction: null,
     create() {
         const startCells = [{ coll: 7, row: 7 }, { coll: 7, row: 8 }];
 
         for ({ coll, row } of startCells) {
             this.cells.push(this.board.getCellByCollRow(coll, row));
         }
+    },
+    hasCell(cell) {
+      return !!this.cells.find(part => part === cell);
     },
     move() {
         if (!this.moving) {
@@ -23,9 +45,13 @@ game.snake = {
         }
     },
     getNextCell() {
+
+        if (!this.direction) return ;
+
         const head = this.cells[0];
-        const row = head.row - 1;
-        const coll = head.coll;
+
+        const row = head.row + this.direction.row;
+        const coll = head.coll + this.direction.coll;
 
         return this.board.getCellByCollRow(coll, row);
     },

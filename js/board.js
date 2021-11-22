@@ -10,14 +10,27 @@ game.board = {
         this.setOffsets();
         this.createCells();
     },
+    getRandomAvailableCell() {
+
+        const pool = this.cells.filter(cell => !game.snake.hasCell(cell));
+
+        return pool[game.random(0, pool.length - 1)];
+    },
+    createFood() {
+        const cell = this.getRandomAvailableCell();
+
+        if (cell) {
+            cell.hasFood = true;
+        }
+    },
     createCells() {
         for (let row = 0; row < this.size; row++) {
             for (let coll = 0; coll < this.size; coll++) {
-                this.cells.push(this.createCall(row, coll));
+                this.cells.push(this.createCell(row, coll));
             }
         }
     },
-    createCall(row, coll) {
+    createCell(row, coll) {
         const cellWidth = this.cell.width + this.OFFSET_BETWEEN_CELLS;
         const cellHeight = this.cell.height + this.OFFSET_BETWEEN_CELLS;
 
@@ -49,6 +62,9 @@ game.board = {
 
         for (const cell of this.cells) {
             ctx.drawImage(sprites.cell, cell.x, cell.y);
+            if (cell.hasFood) {
+                ctx.drawImage(sprites.food, cell.x, cell.y);
+            }
         }
     }
 }

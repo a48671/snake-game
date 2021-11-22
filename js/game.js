@@ -8,7 +8,8 @@ const game = {
     sprites: {
         background: null,
         cell: null,
-        body: null
+        body: null,
+        food: null
     },
     dimensions: {
         max: {
@@ -96,10 +97,35 @@ const game = {
     create() {
         this.board.create();
         this.snake.create();
+        this.board.createFood();
 
-        document.addEventListener('keydown', () => {
-            this.snake.moving = true;
-        })
+        const { snake, snake: { directions } } = this;
+
+        snake.direction = directions.up;
+
+        document.addEventListener('keydown', e => {
+            let isUnexpectCode = false;
+
+            switch (e.code) {
+                case 'ArrowUp' :
+                    snake.direction = directions.up;
+                    break;
+                case 'ArrowDown' :
+                    snake.direction = directions.down;
+                    break;
+                case 'ArrowRight' :
+                    snake.direction = directions.right;
+                    break;
+                case 'ArrowLeft' :
+                    snake.direction = directions.left;
+                    break;
+                default :
+                    isUnexpectCode = true;
+            }
+            if (!this.snake.moving && !isUnexpectCode) {
+                this.snake.moving = true;
+            }
+        });
     },
     run() {
         this.create();
@@ -118,5 +144,8 @@ const game = {
             board.render();
             snake.render();
         });
+    },
+    random(min, max) {
+        return Math.round(min + Math.random() * max);
     }
 };

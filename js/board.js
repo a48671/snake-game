@@ -54,6 +54,12 @@ game.board = {
         this.offsets.offsetX = (game.width - boardWidth) / 2;
         this.offsets.offsetY = (game.height - boardHeight) / 2;
     },
+    isCellFood(cell) {
+        return cell.hasFood;
+    },
+    removeFoodFromCell(cell) {
+        cell.hasFood = false;
+    },
     getCellByCollRow(coll, row) {
         return this.cells.find(cell => (cell.row === row && cell.coll === coll));
     },

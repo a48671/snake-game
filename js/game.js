@@ -3,6 +3,7 @@ const game = {
     ctx: null,
     board: null,
     snake: null,
+    SNAKE_SPEED: 300,
     width: 0,
     height: 0,
     sprites: {
@@ -132,7 +133,7 @@ const game = {
 
         setInterval(() => {
             this.update();
-        }, 150);
+        }, this.SNAKE_SPEED);
     },
     render() {
         const { ctx, sprites, board, snake, width, height } = this;

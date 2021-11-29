@@ -41,7 +41,13 @@ game.snake = {
 
         if (cell) {
             this.cells.unshift(cell);
-            this.cells.pop();
+
+            if (!this.board.isCellFood(cell)) {
+                this.cells.pop();
+            } else {
+                this.board.removeFoodFromCell(cell);
+                this.board.createFood();
+            }
         }
     },
     getNextCell() {

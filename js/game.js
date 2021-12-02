@@ -3,14 +3,15 @@ const game = {
     ctx: null,
     board: null,
     snake: null,
-    SNAKE_SPEED: 300,
+    SNAKE_SPEED: 600,
     width: 0,
     height: 0,
     sprites: {
         background: null,
         cell: null,
         body: null,
-        food: null
+        food: null,
+        head: null
     },
     dimensions: {
         max: {

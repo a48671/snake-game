@@ -6,19 +6,23 @@ game.snake = {
     directions: {
         up: {
             row: -1,
-            coll: 0
+            coll: 0,
+            angle: 0
         },
         down: {
             row: 1,
-            coll: 0
+            coll: 0,
+            angle: 180
         },
         right: {
             row: 0,
-            coll: 1
+            coll: 1,
+            angle: 90
         },
         left: {
             row: 0,
-            coll: -1
+            coll: -1,
+            angle: 270
         }
     },
     direction: null,
@@ -61,12 +65,34 @@ game.snake = {
 
         return this.board.getCellByCollRow(coll, row);
     },
-    render() {
+    renderHead() {
+        const { x, y } = this.cells[0];
+        const ctx = this.game.ctx;
+        const head = this.game.sprites.head;
+        const halfSize = head.width / 2;
+
+        const degree = this.direction.angle;
+
+        ctx.save();
+
+        ctx.translate(x + halfSize, y + halfSize);
+        ctx.rotate(degree * Math.PI / 180);
+
+        ctx.drawImage(head, -halfSize, -halfSize);
+
+        ctx.restore();
+    },
+    renderBody() {
         const body = this.game.sprites.body;
         const ctx = this.game.ctx;
 
-        for ({ x, y } of this.cells) {
-            ctx.drawImage(body, x, y);
+        for (let index = this.cells.length; --index;) {
+            const { x, y } = this.cells[index];
+            ctx.drawImage(body, x, y)
         }
+    },
+    render() {
+        this.renderBody();
+        this.renderHead();
     }
 };

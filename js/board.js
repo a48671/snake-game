@@ -59,6 +59,11 @@ game.board = {
     },
     removeFoodFromCell(cell) {
         cell.hasFood = false;
+        const like = document.getElementById('like');
+        like.classList.add('shown');
+        setTimeout(function () {
+            like.classList.remove('shown');
+        }, 2000);
     },
     getCellByCollRow(coll, row) {
         return this.cells.find(cell => (cell.row === row && cell.coll === coll));

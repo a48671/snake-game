@@ -52,6 +52,10 @@ game.snake = {
                 this.board.removeFoodFromCell(cell);
                 this.board.createFood();
             }
+
+            if (this.board.isCellBomb(cell)) {
+                this.board.removeBombFromCell(cell);
+            }
         }
     },
     getNextCell() {

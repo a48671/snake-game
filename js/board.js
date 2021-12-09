@@ -12,16 +12,28 @@ game.board = {
     },
     getRandomAvailableCell() {
 
-        const pool = this.cells.filter(cell => !game.snake.hasCell(cell));
+        const pool = this.cells.filter(cell => !game.snake.hasCell(cell) && !cell.type);
 
         return pool[game.random(0, pool.length - 1)];
     },
-    createFood() {
+    createObjectInCell(type) {
         const cell = this.getRandomAvailableCell();
 
         if (cell) {
-            cell.hasFood = true;
+            cell.type = type;
         }
+    },
+    createFood() {
+        this.createObjectInCell('food');
+    },
+    createBomb() {
+        const cellWithBomb = this.cells.find(cell => cell.type === 'bomb');
+
+        if (cellWithBomb) {
+            cellWithBomb.type = null;
+        }
+
+        this.createObjectInCell('bomb');
     },
     createCells() {
         for (let row = 0; row < this.size; row++) {
@@ -55,15 +67,20 @@ game.board = {
         this.offsets.offsetY = (game.height - boardHeight) / 2;
     },
     isCellFood(cell) {
-        return cell.hasFood;
+        return cell.type === 'food';
+    },
+    isCellBomb(cell) {
+        return cell.type === 'bomb';
     },
     removeFoodFromCell(cell) {
-        cell.hasFood = false;
-        const like = document.getElementById('like');
-        like.classList.add('shown');
-        setTimeout(function () {
-            like.classList.remove('shown');
-        }, 2000);
+        cell.type = null;
+        this.game.showDialog('likes');
+        this.game.sounds.food.play();
+    },
+    removeBombFromCell(cell) {
+        cell.type = null;
+        this.game.showDialog('wrongs');
+        this.game.sounds.bomb.play();
     },
     getCellByCollRow(coll, row) {
         return this.cells.find(cell => (cell.row === row && cell.coll === coll));
@@ -73,8 +90,13 @@ game.board = {
 
         for (const cell of this.cells) {
             ctx.drawImage(sprites.cell, cell.x, cell.y);
-            if (cell.hasFood) {
+
+            if (cell.type === 'food') {
                 ctx.drawImage(sprites.food, cell.x, cell.y);
+            }
+
+            if (cell.type === 'bomb') {
+                ctx.drawImage(sprites.bomb, cell.x, cell.y);
             }
         }
     }
